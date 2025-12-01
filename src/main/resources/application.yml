@@ -1,0 +1,66 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: chainsaw
+
+  # 파일 업로드 관련 설정
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+
+  # --- 1. SPRING SECURITY (Google OAuth2) ---
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID} # .env에서 로드
+            client-secret: ${GOOGLE_CLIENT_SECRET} # .env에서 로드
+            scope:
+              - email
+              - profile
+
+  # --- 2. DATASOURCE (Azure MySQL) ---
+  datasource:
+    url: ${DATASOURCE_URL} # .env에서 로드
+    username: ${DATASOURCE_USERNAME} # .env에서 로드
+    password: ${DATASOURCE_PASSWORD} # .env에서 로드
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # --- 3. JPA/Hibernate 설정 ---
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+
+# --- 4. JWT 설정 ---
+jwt:
+  secret-key: ${JWT_SECRET_KEY} # .env에서 로드
+  access-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS} # .env에서 로드
+  refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS} # .env에서 로드
+
+# --- 5. BLOCKCHAIN (Web3j) 설정 ---
+blockchain:
+  # RPC URL 및 Contract Address는 그대로 유지
+  rpc-url: "https://0xrpc.io/sep"
+  contract-address: "0x0740c3EC6e6d4001018759fbc39b5491ca482FCB"
+  chain-id: 11155111
+
+# --- 6. WALLET ---
+wallet:
+  secret-key: ${WALLET_SECRET_KEY} # .env에서 로드
+
+# --- 7. PINATA (IPFS) 설정 ---
+pinata:
+  base-url: "https://api.pinata.cloud"
+  api-key: ${PINATA_API_KEY} # .env에서 로드
+  secret-key: ${PINATA_SECRET_KEY} # .env에서 로드
+  jwt: ${PINATA_JWT} # .env에서 로드
